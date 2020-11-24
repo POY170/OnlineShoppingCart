@@ -45,7 +45,7 @@ public class AddToCartController extends HttpServlet {
         cart.setPrice(Double.parseDouble(request.getParameter("price")));
         cart.setQty(Integer.parseInt(request.getParameter("qty")));
         //int rowInserted = EmployeeTable.insertEmployee(emp);
-        int rowInserted = CartTable.insertCart(em,cart);
+        int rowInserted = CartTable.insertCart(cart);
         request.setAttribute("rowInserted", rowInserted);
         
         request.getRequestDispatcher("shoppingCart.jsp").forward(request, response);

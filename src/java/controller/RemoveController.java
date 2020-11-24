@@ -36,13 +36,13 @@ public class RemoveController extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         HttpSession session = request.getSession();
         EntityManager em = (EntityManager) session.getAttribute("entitymanager");
-        Cart cart = CartTable.findCartById(em, id);
+        Cart cart = CartTable.findCartById(id);
         session.setAttribute("cart", cart);
         
         int rowDeleted = 0;
         //Cart cart = (Cart) session.getAttribute("cart");
         if (request.getParameter("remove") != null ) {
-            rowDeleted = CartTable.removeCart(em,cart.getId());
+            rowDeleted = CartTable.removeCart(cart.getId());
             
         }
         request.setAttribute("rowDeleted", rowDeleted);

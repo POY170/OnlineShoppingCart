@@ -4,6 +4,7 @@
     Author     : POY
 --%>
 
+<%@page import="java.util.List"%>
 <%@page import="model.DvdTable"%>
 <%@page import="model.Dvd"%>
 <%@page import="java.util.Vector"%>
@@ -18,8 +19,8 @@
     </head>
     <jsp:useBean id="dvd" class="model.Dvd" scope="request"/>
     <%
-            EntityManager em = (EntityManager) session.getAttribute("entitymanager");
-            Vector<Dvd> empList = DvdTable.findAllDvd(em);
+//            EntityManager em = (EntityManager) session.getAttribute("entitymanager");
+            List<Dvd> empList = DvdTable.findAllDvd();
             Iterator<Dvd> itr = empList.iterator();
 //            Dvd dvd = (Dvd )session.getAttribute("dvd");
      %>
@@ -48,12 +49,13 @@
                                <td><input type="text" name="price" value="<%=dvd.getPrice()%>" size="10" readonly/></td>
                                <td><input type="text" name="qty" value="" size="10" /></td>
                                <td><input type="submit" value="AddToCart" name="submit" /></td>
-                            </form>
                                <tr></tr>
+                            </form>
+                               
                         <%}%>
                      
             </table>
-            <a href="cart.jsp">Your Cart</a>
+            <a href="shoppingCart.jsp">Your Cart</a>
          </center>
     </body>
 </html>

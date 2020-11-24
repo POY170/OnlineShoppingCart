@@ -4,6 +4,7 @@
     Author     : POY
 --%>
 
+<%@page import="java.util.List"%>
 <%@page import="model.CartTable"%>
 <%@page import="model.Cart"%>
 <%@page import="java.util.Iterator"%>
@@ -22,7 +23,7 @@
     <jsp:useBean id="cart" class="model.Cart" scope="request"/>
     <%
             EntityManager em = (EntityManager) session.getAttribute("entitymanager");
-            Vector<Cart> cartList = CartTable.findAllCart(em);
+            List<Cart> cartList = CartTable.findAllCart();
             Iterator<Cart> itr = cartList.iterator();
      %>
     <body>

@@ -1,73 +1,81 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this tcartlate file, choose Tools | Tcartlates
+ * and open the tcartlate in the editor.
  */
 package model;
 
+import java.util.List;
 import java.util.Vector;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
  * @author POY
  */
 public class CartTable {
-    public static Vector<Cart> findAllCart(EntityManager em) {
-        Vector<Cart> dvdList = null;
+    public static List<Cart> findAllCart() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("OnlineShoppingCartPU");
+        EntityManager em = emf.createEntityManager();
+        List<Cart> cartList = null;
         try {
-            dvdList = (Vector<Cart>) em.createNamedQuery("Cart.findAll").getResultList();
-            //em.close();
-            
+            cartList = (List<Cart>) em.createNamedQuery("Cart.findAll").getResultList();         
         } catch (Exception e) {
-            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            throw new RuntimeException(e);
+            
+        }
+        finally {
+            em.close();
+            emf.close();
+        }
+        return cartList;
+    }    
+    public static Cart findCartById(int id) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("OnlineShoppingCartPU");
+        EntityManager em = emf.createEntityManager();
+        Cart cart = null;
+        try {
+            cart = em.find(Cart.class, id);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         finally {
             em.close();
+            emf.close();
         }
-        return dvdList;
-    }
-    public static Cart findCartById(EntityManager em, int id) {
-        Cart dvd = null;
-        try {
-            dvd = em.find(Cart.class, id);
-            //em.close();
-            
-        } catch (Exception e) {
-            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            throw new RuntimeException(e);
-        }
-        finally {
-            em.close();
-        }
-        return dvd;
+        return cart;
     }
     //public static int updateCart(EntityManager em, 
     //        UserTransaction utx, Cart dvd) {
-    public static int updateCart(EntityManager em, Cart dvd) {
-        try {
-            em.getTransaction().begin();
-            Cart target = em.find(Cart.class, dvd.getId());
-            if (target == null) {
-                return 0;
-            }
-            target.setQty(dvd.getQty());
-//            target.setSalary(dvd.getSalary());
-            em.persist(target);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            throw new RuntimeException(e);
-            
-        }
-        finally {
-            em.close();
-        }
-        return 1;
-        
-    }
-    public static int removeCart(EntityManager em, int id) {
+//    public static int updateCart(Cart cart) {
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("OnlineShoppingCartPU");
+//        EntityManager em = emf.createEntityManager();
+//        try {
+//            em.getTransaction().begin();
+//            Cart target = em.find(Cart.class, cart.getId());
+//            if (target == null) {
+//                return 0;
+//            }
+//            target.setName(cart.getName());
+//            target.setSalary(cart.getSalary());
+//            em.persist(target);
+//            em.getTransaction().commit();
+//        } catch (Exception e) {
+//            em.getTransaction().rollback();
+//            
+//        }
+//        finally {
+//            em.close();
+//            emf.close();
+//        }
+//        return 1;
+//        
+//    }
+    public static int removeCart(int id) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("OnlineShoppingCartPU");
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             Cart target = em.find(Cart.class, id);
@@ -77,32 +85,34 @@ public class CartTable {
             em.remove(target);
             em.getTransaction().commit();
         } catch (Exception e) {
-            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            throw new RuntimeException(e);
+            em.getTransaction().rollback();
             
         }
         finally {
             em.close();
+            emf.close();
         }
         return 1;
     }
     
-    public static int insertCart(EntityManager em, Cart dvd) {
+    public static int insertCart(Cart cart) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("OnlineShoppingCartPU");
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            Cart target = em.find(Cart.class, dvd.getId());
+            Cart target = em.find(Cart.class, cart.getId());
             if (target != null) {
                 return 0;
             }
-            em.persist(dvd);
+            em.persist(cart);
             em.getTransaction().commit();
         } catch (Exception e) {
-            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            throw new RuntimeException(e);
+            em.getTransaction().rollback();
             
         }
         finally {
             em.close();
+            emf.close();
         }
         return 1;
     }

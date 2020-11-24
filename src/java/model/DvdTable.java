@@ -5,69 +5,77 @@
  */
 package model;
 
+import java.util.List;
 import java.util.Vector;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
  * @author POY
  */
 public class DvdTable {
-    public static Vector<Dvd> findAllDvd(EntityManager em) {
-        Vector<Dvd> dvdList = null;
+    public static List<Dvd> findAllDvd() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("OnlineShoppingCartPU");
+        EntityManager em = emf.createEntityManager();
+        List<Dvd> dvdList = null;
         try {
-            dvdList = (Vector<Dvd>) em.createNamedQuery("Dvd.findAll").getResultList();
-            //em.close();
-            
+            dvdList = (List<Dvd>) em.createNamedQuery("Dvd.findAll").getResultList();         
         } catch (Exception e) {
-            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
             throw new RuntimeException(e);
+            
         }
         finally {
             em.close();
+            emf.close();
         }
         return dvdList;
-    }
-    public static Dvd findDvdById(EntityManager em, int id) {
+    }    
+    public static Dvd findDvdById(int id) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("OnlineShoppingCartPU");
+        EntityManager em = emf.createEntityManager();
         Dvd dvd = null;
         try {
             dvd = em.find(Dvd.class, id);
-            //em.close();
-            
         } catch (Exception e) {
-            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
             throw new RuntimeException(e);
         }
         finally {
             em.close();
+            emf.close();
         }
         return dvd;
     }
     //public static int updateDvd(EntityManager em, 
     //        UserTransaction utx, Dvd dvd) {
-    public static int updateDvd(EntityManager em, Dvd dvd) {
-        try {
-            em.getTransaction().begin();
-            Dvd target = em.find(Dvd.class, dvd.getId());
-            if (target == null) {
-                return 0;
-            }
-            target.setQty(dvd.getQty());
+//    public static int updateDvd(Dvd dvd) {
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("OnlineShoppingCartPU");
+//        EntityManager em = emf.createEntityManager();
+//        try {
+//            em.getTransaction().begin();
+//            Dvd target = em.find(Dvd.class, dvd.getId());
+//            if (target == null) {
+//                return 0;
+//            }
+//            target.setName(dvd.getName());
 //            target.setSalary(dvd.getSalary());
-            em.persist(target);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            throw new RuntimeException(e);
-            
-        }
-        finally {
-            em.close();
-        }
-        return 1;
-        
-    }
-    public static int removeDvd(EntityManager em, int id) {
+//            em.persist(target);
+//            em.getTransaction().commit();
+//        } catch (Exception e) {
+//            em.getTransaction().rollback();
+//            
+//        }
+//        finally {
+//            em.close();
+//            emf.close();
+//        }
+//        return 1;
+//        
+//    }
+    public static int removeDvd(int id) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("OnlineShoppingCartPU");
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             Dvd target = em.find(Dvd.class, id);
@@ -77,17 +85,19 @@ public class DvdTable {
             em.remove(target);
             em.getTransaction().commit();
         } catch (Exception e) {
-            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            throw new RuntimeException(e);
+            em.getTransaction().rollback();
             
         }
         finally {
             em.close();
+            emf.close();
         }
         return 1;
     }
     
-    public static int insertDvd(EntityManager em, Dvd dvd) {
+    public static int insertDvd(Dvd dvd) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("OnlineShoppingCartPU");
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             Dvd target = em.find(Dvd.class, dvd.getId());
@@ -97,12 +107,12 @@ public class DvdTable {
             em.persist(dvd);
             em.getTransaction().commit();
         } catch (Exception e) {
-            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            throw new RuntimeException(e);
+            em.getTransaction().rollback();
             
         }
         finally {
             em.close();
+            emf.close();
         }
         return 1;
     }

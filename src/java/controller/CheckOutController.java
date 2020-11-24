@@ -8,6 +8,7 @@ package controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -38,7 +39,7 @@ public class CheckOutController extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         EntityManager em = (EntityManager) session.getAttribute("entitymanager");
-        Vector<Cart> cartList = CartTable.findAllCart(em);
+        List<Cart> cartList = CartTable.findAllCart();
         Iterator<Cart> itr = cartList.iterator();
         
         Cart cart = new Cart();

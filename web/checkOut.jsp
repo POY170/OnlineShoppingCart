@@ -13,7 +13,7 @@
     </head>
     <body>
         <h1>Your Order is Confirmed!</h1>
-        <h1>The total amount is $<%session.getAttribute("total");%></h1>
+        <h1>The total amount is $ <%=session.getAttribute("total")%></h1>
         <br><br>
         <a href="catalog.jsp">Catalog</a>
     </body>
